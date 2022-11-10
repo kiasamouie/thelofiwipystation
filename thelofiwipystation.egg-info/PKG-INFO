@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: thelofiwipystation
+Version: 0.0.1
+Summary: thelofiwipystation
+Home-page: https://github.com/kiasamouie/thelofiwipystation
+Author: Kia Samouie
+Author-email: thekiadoe@gmail.com
+License: MIT
+Keywords: thelofiwipystation
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+License-File: LICENSE
