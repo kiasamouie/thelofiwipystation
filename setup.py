@@ -1,10 +1,18 @@
 from setuptools import setup
+import os
 
 
 def readme():
     with open("README.md") as f:
         return f.read()
 
+
+lib_folder = os.path.dirname(os.path.realpath(__file__))
+requirement_path = lib_folder + '/requirements.txt'
+install_requires = []
+if os.path.isfile(requirement_path):
+    with open(requirement_path) as f:
+        install_requires = f.read().splitlines()
 
 setup(
     name="thelofiwipystation",
@@ -25,6 +33,6 @@ setup(
     keywords="thelofiwipystation",
     license="MIT",
     packages=["lofiwifi"],
-    install_requires=[],
+    install_requires=install_requires,
     include_package_data=True,
 )
