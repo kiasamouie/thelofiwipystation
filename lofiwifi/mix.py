@@ -75,7 +75,7 @@ class Mix:
         fileInfo = open(os.path.join(self.__save_directory,"info.txt"),'w',encoding="utf-8")
         for n in range(0, self.__n_times):
             last = n + 1 == self.__n_times
-            if self.__extra_seconds and n > 0:
+            if self.__extra_seconds and n != 0:
                 next += timedelta(seconds=self.__extra_seconds)
             for i, filename in enumerate(self.__tracks):
                 mp3 = eyed3.load(os.path.join(self.tracks_directory, filename))
@@ -86,12 +86,14 @@ class Mix:
                 else:
                     timestamp = str(next)
                     next += secs
-                if next.seconds - secs.seconds < 3600 and not over_hour:
+                if next.seconds - secs.seconds < 3600 and over_hour:
                     timestamp = timestamp.split(':', 1)[1]
 
+                count += 1
                 backslash = "\n" if not last or filename != self.__tracks[-1] else ""
                 track_name = self.track_list_data[i]['title']
-                count += 1
+                if n > 0:
+                    track_name = track_name.split(" - ",1)[0]
 
                 fileInfo.write(f'{timestamp} - {str(count).zfill(2)} | {track_name}{backslash}')
             if self.__n_times > 1 and not last:
@@ -105,8 +107,6 @@ class Mix:
         fileInfo.close()
 
     def Clean_Tracks(self):
-        if os.path.isdir(self.tracks_directory):
-            return
         track_list_ids = [obj['id'] for obj in self.track_list_data]
         for i, filename in enumerate(os.listdir(self.tracks_directory)):
             name = ''
