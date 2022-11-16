@@ -1,19 +1,15 @@
 from setuptools import setup
 import os
 
-
 def readme():
     with open("README.md") as f:
         return f.read()
 
-
-lib_folder = os.path.dirname(os.path.realpath(__file__))
-requirement_path = lib_folder + '/requirements.txt'
+requirement_path = '/requirements.txt'
 install_requires = []
 if os.path.isfile(requirement_path):
     with open(requirement_path) as f:
         install_requires = f.read().splitlines()
-
 setup(
     name="thelofiwipystation",
     version="0.0.1",

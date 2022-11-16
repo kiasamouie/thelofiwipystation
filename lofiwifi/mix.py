@@ -1,8 +1,9 @@
+import math
 import os
 import shutil as sh
-import eyed3
-import math
 from datetime import timedelta
+
+import eyed3
 from moviepy.editor import *
 
 
@@ -72,7 +73,7 @@ class Mix:
         next = 0
         self.__tracks = os.listdir(self.tracks_directory)
         over_hour = math.ceil(duration * self.__n_times) > 3600
-        fileInfo = open(os.path.join(self.__save_directory,"info.txt"),'w',encoding="utf-8")
+        fileInfo = open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8")
         for n in range(0, self.__n_times):
             last = n + 1 == self.__n_times
             if self.__extra_seconds and n != 0:
@@ -93,7 +94,7 @@ class Mix:
                 backslash = "\n" if not last or filename != self.__tracks[-1] else ""
                 track_name = self.track_list_data[i]['title']
                 if n > 0:
-                    track_name = track_name.split(" - ",1)[0]
+                    track_name = track_name.split(" - ", 1)[0]
 
                 fileInfo.write(f'{timestamp} - {str(count).zfill(2)} | {track_name}{backslash}')
             if self.__n_times > 1 and not last:
@@ -120,6 +121,4 @@ class Mix:
 
     def Audio(self):
         self.__tracks = os.listdir(self.tracks_directory)
-        return concatenate_audioclips(
-            [AudioFileClip(os.path.join(self.tracks_directory, track)) for track in self.__tracks]
-        )
+        return concatenate_audioclips([AudioFileClip(os.path.join(self.tracks_directory, track)) for track in self.__tracks])
