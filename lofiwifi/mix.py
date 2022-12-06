@@ -96,7 +96,8 @@ class Mix:
                 if n > 0:
                     track_name = track_name.split(" - ", 1)[0]
 
-                fileInfo.write(f'{timestamp} - {str(count).zfill(2)} | {track_name}{backslash}')
+                fileInfo.write(
+                    f'{timestamp} - {str(count).zfill(2)} | {track_name}{backslash}')
             if self.__n_times > 1 and not last:
                 fileInfo.write(f"LOOP\n")
 

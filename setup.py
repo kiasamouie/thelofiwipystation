@@ -1,15 +1,11 @@
 from setuptools import setup
-import os
+
 
 def readme():
     with open("README.md") as f:
         return f.read()
 
-requirement_path = '/requirements.txt'
-install_requires = []
-if os.path.isfile(requirement_path):
-    with open(requirement_path) as f:
-        install_requires = f.read().splitlines()
+
 setup(
     name="thelofiwipystation",
     version="0.0.1",
@@ -29,6 +25,6 @@ setup(
     keywords="thelofiwipystation",
     license="MIT",
     packages=["lofiwifi"],
-    install_requires=install_requires,
+    install_requires=['moviepy', 'youtube-dl'],
     include_package_data=True,
 )
