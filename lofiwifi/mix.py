@@ -73,7 +73,7 @@ class Mix:
         next = 0
         self.__tracks = os.listdir(self.tracks_directory)
         over_hour = math.ceil(duration * self.__n_times) > 3600
-        fileInfo = open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8")
+        infoFile = open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8")
         for n in range(0, self.__n_times):
             last = n + 1 == self.__n_times
             if self.__extra_seconds and n != 0:
@@ -96,17 +96,17 @@ class Mix:
                 if n > 0:
                     track_name = track_name.split(" - ", 1)[0]
 
-                fileInfo.write(
+                infoFile.write(
                     f'{timestamp} - {str(count).zfill(2)} | {track_name}{backslash}')
             if self.__n_times > 1 and not last:
-                fileInfo.write(f"LOOP\n")
+                infoFile.write(f"LOOP\n")
 
-        fileInfo.write("\n\n")
+        infoFile.write("\n\n")
         track_list_urls = [obj['url'] for obj in self.track_list_data]
         for i, url in enumerate(track_list_urls):
             backslash = "\n" if url != track_list_urls[-1] else ""
-            fileInfo.write(f'{str(i+1).zfill(2)} - {url}{backslash}')
-        fileInfo.close()
+            infoFile.write(f'{str(i+1).zfill(2)} - {url}{backslash}')
+        infoFile.close()
 
     def Clean_Tracks(self):
         track_list_ids = [obj['id'] for obj in self.track_list_data]
