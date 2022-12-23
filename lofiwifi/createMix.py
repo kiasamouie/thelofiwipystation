@@ -5,8 +5,8 @@ from lofiwifi.source import Source
 from lofiwifi.mix import Mix
 
 # Default Values
-title = "christmas lofi"
-url = "https://soundcloud.com/thelofiwifistation/sets/christmas-lofi"
+title = "winter lofi"
+url = "https://soundcloud.com/thelofiwifistation/sets/snowy-sunset-winter-lofi-mix"
 loop = "loop.gif"
 
 try:
@@ -28,7 +28,7 @@ try:
         source.tracks_directory,
         loop=loop,
         # n_times=6,
-        # extra_seconds=7,
+        # extra_seconds=2,
         # keep_tracks=True,
         fadein=2,
         fadeout=2,

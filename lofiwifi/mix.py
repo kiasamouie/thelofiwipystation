@@ -73,17 +73,18 @@ class Mix:
         next = 0
         self.__tracks = os.listdir(self.tracks_directory)
         over_hour = math.ceil(duration * self.__n_times) > 3600
-        infoFile = open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8")
+        infoFile = open(os.path.join(self.__save_directory,
+                        "info.txt"), 'w', encoding="utf-8")
         for n in range(0, self.__n_times):
             last = n + 1 == self.__n_times
-            if self.__extra_seconds and n != 0:
-                next += timedelta(seconds=self.__extra_seconds)
             for i, filename in enumerate(self.__tracks):
                 mp3 = eyed3.load(os.path.join(self.tracks_directory, filename))
                 secs = timedelta(seconds=int(mp3.info.time_secs))
                 if i == 0 and n == 0:
                     timestamp = "0:00:00"
                     next = secs
+                    if self.__extra_seconds:
+                        next += timedelta(seconds=self.__extra_seconds)
                 else:
                     timestamp = str(next)
                     next += secs
