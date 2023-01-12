@@ -73,8 +73,7 @@ class Mix:
         next = 0
         self.__tracks = os.listdir(self.tracks_directory)
         over_hour = math.ceil(duration * self.__n_times) > 3600
-        infoFile = open(os.path.join(self.__save_directory,
-                        "info.txt"), 'w', encoding="utf-8")
+        infoFile = open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8")
         for n in range(0, self.__n_times):
             last = n + 1 == self.__n_times
             for i, filename in enumerate(self.__tracks):
@@ -88,7 +87,7 @@ class Mix:
                 else:
                     timestamp = str(next)
                     next += secs
-                if next.seconds - secs.seconds < 3600 and over_hour:
+                if next.seconds - secs.seconds < 3600 and not over_hour:
                     timestamp = timestamp.split(':', 1)[1]
 
                 count += 1

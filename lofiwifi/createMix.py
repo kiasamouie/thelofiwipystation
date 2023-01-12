@@ -5,9 +5,9 @@ from lofiwifi.source import Source
 from lofiwifi.mix import Mix
 
 # Default Values
-title = "winter lofi"
-url = "https://soundcloud.com/thelofiwifistation/sets/snowy-sunset-winter-lofi-mix"
-loop = "loop.gif"
+title = "head bopping"
+url = "https://soundcloud.com/thelofiwifistation/sets/head-bopping"
+loop = "loop.mp4"
 
 try:
     arguments, values = getopt.getopt(sys.argv[1:], "t:u:l:m:", ["TITLE", "URL", "LOOP", "MIX"])

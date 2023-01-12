@@ -25,6 +25,6 @@ setup(
     keywords="thelofiwipystation",
     license="MIT",
     packages=["lofiwifi"],
-    install_requires=['moviepy', 'youtube-dl','eyed3'],
+    install_requires=['moviepy','youtube-dl','eyed3'],
     include_package_data=True,
 )
