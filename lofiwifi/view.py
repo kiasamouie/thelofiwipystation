@@ -30,13 +30,10 @@ app_layout = [
 ]
 window = sg.Window('LofiWiPyStation', app_layout)
 
-
 def clear_input(window, values):
-    print(window)
     for key, element in window.key_dict.items():
         if isinstance(element, sg.Input):
             element.update(value='')
-
 
 while True:
     event, values = window.read()
