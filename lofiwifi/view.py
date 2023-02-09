@@ -63,7 +63,7 @@ while True:
     if not values['url']:
         sg.Popup('Please select a URL')
         continue
-    if not values['loop']:
+    if not values['audio_only'] and not values['loop']:
         sg.Popup('Please select a Loop')
         continue
 
