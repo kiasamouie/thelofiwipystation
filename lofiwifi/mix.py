@@ -14,6 +14,8 @@ class Mix:
         track_list_data,
         tracks_directory,
         loop=None,
+        audio_only=False,
+        audio_type='mp3',
         n_times=1,
         extra_seconds=None,
         keep_tracks=False,
@@ -23,6 +25,7 @@ class Mix:
         self.track_list_data = track_list_data
         self.tracks_directory = tracks_directory
         self.__loop = loop
+        self.__audio_only = audio_only
 
         self.__n_times = n_times
         self.__extra_seconds = extra_seconds
@@ -33,32 +36,32 @@ class Mix:
         self.__tracks = os.listdir(tracks_directory)
         self.__save_directory = tracks_directory.rsplit("\\", 1)[0]
 
-    def Create_Mix_Audio(self):
-        audio = self.Clean_Audio_Info()
-        audio.write_audiofile(os.path.join(self.__save_directory, "audio.mp3"))
-        if not self.__keep_tracks:
-            sh.rmtree(self.tracks_directory)
+        self.__audioFile = os.path.join(self.__save_directory, f"audio.{audio_type}")
+        self.__videoFile = os.path.join(self.__save_directory, "video.mp4")
 
     def Create_Mix(self):
         audio = self.Clean_Audio_Info()
-        loop = VideoFileClip(self.__loop)
-        mix = [loop] * round(audio.duration / loop.duration)
-        video = concatenate_videoclips(mix, method="compose")
-        video.audio = audio
+        if self.__audio_only:
+            audio.write_audiofile(self.__audioFile)
+        else:
+            loop = self.Loop(audio)
+            mix = [loop] * round(audio.duration / loop.duration)
+            video = concatenate_videoclips(mix, method="compose")
+            video.audio = audio
 
-        if self.__fadein:
-            video = video.fadein(self.__fadein)
-        if self.__fadeout:
-            video = video.fadeout(self.__fadeout)
+            if self.__fadein:
+                video = video.fadein(self.__fadein)
+            if self.__fadeout:
+                video = video.fadeout(self.__fadeout)
 
-        video.write_videofile(
-            os.path.join(self.__save_directory, "video.mp4"),
-            temp_audiofile=os.path.join(self.__save_directory, "audio.mp3"),
-            remove_temp=False,
-            fps=24,
-            threads=32,
-            codec="libx264"
-        )
+            video.write_videofile(
+                self.__videoFile,
+                temp_audiofile=self.__audioFile,
+                remove_temp=False,
+                fps=24,
+                threads=32,
+                codec="libx264"
+            )
         if not self.__keep_tracks:
             sh.rmtree(self.tracks_directory)
 
@@ -119,6 +122,12 @@ class Mix:
             id = filename.replace(".mp3", '')
             name = f'{str(track_list_ids.index(id) + 1).zfill(2)}.{filename}'
             os.rename(file, os.path.join(self.tracks_directory, name))
+    
+    def Loop(self, audio):
+        if self.__loop.endswith(('png','jpg','jpeg')):
+            return ImageClip(self.__loop).set_duration(audio.duration)
+        elif self.__loop.endswith(('gif','mp4')):
+            return VideoFileClip(self.__loop)
 
     def Audio(self):
         self.__tracks = os.listdir(self.tracks_directory)

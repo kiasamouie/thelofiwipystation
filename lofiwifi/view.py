@@ -7,10 +7,14 @@ from lofiwifi.mix import Mix
 # pip install pysimplegui
 # sg.theme('DarkBlack')
 save_dir = os.path.expanduser('~\Documents')
+loop_inputs = [sg.Input('', key='loop'), sg.FileBrowse()]
+audio_types = ['mp3','wav']
+
 soundcloud = [
     [sg.T('Title', size=(15, 1)), sg.Input('', key='title')],
     [sg.T('URL', size=(15, 1)), sg.Input('https://soundcloud.com/', key='url')],
-    [sg.T('Loop Directory', size=(15, 1)), sg.Input('', key='loop'), sg.FileBrowse()],
+    [sg.T('Loop Directory', size=(15, 1))] + loop_inputs,
+    [sg.Text('Audio Type', size=(15, 1)),sg.Combo(values=audio_types, default_value=audio_types[0], size=(20, len(audio_types)), key='audio_type')],
     # [sg.T('Save Directory', size=(15, 1)),sg.Input(save_dir, key='save'), sg.FolderBrowse()],
 ]
 
@@ -22,6 +26,7 @@ app_layout = [
     ],
     [
         sg.Column([[
+            sg.Checkbox('Audio Only', default=False, enable_events=True, key='audio_only'),
             sg.Button('Submit'),
             sg.Button('Clear'),
             sg.Button('Close')
@@ -35,11 +40,19 @@ def clear_input(window, values):
         if isinstance(element, sg.Input):
             element.update(value='')
 
+def toggle_loop(values):
+    for input in loop_inputs:
+            input.update(disabled=values['audio_only'])
+
 while True:
     event, values = window.read()
     if event == sg.WIN_CLOSED or event == 'Close':
         break
+    if event == 'audio_only':
+        toggle_loop(values)
 
+    # print(event)
+    # print(values)
     if event == 'Clear':
         clear_input(window, values)
     if event != "Submit":
@@ -60,6 +73,8 @@ while True:
         source.track_list_data,
         source.tracks_directory,
         loop=values['loop'],
+        audio_only=values['audio_only'],
+        audio_type=values['audio_type'],
         # n_times=6,
         # extra_seconds=2,
         # keep_tracks=True,
