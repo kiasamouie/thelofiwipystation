@@ -5,7 +5,7 @@ from lofiwifi.source import Source
 from lofiwifi.mix import Mix
 
 # Default Values
-title = "Sonic"
+title = ""
 url = "https://soundcloud.com/thekiadoe/sets/levels"
 loop = "sonic.jpg"
 
@@ -21,13 +21,12 @@ try:
         if arg in ("-m", "--MIX"):
             print(("MIX (% s)") % (val))
 
-    source = Source(title)
-    source.Download(url)
+    source = Source(url, title)
+    source.Download()
     lofiwifi = Mix(
         source.track_list_data,
         source.tracks_directory,
         loop=loop,
-        audio_only=True,
         # n_times=6,
         # extra_seconds=2,
         # keep_tracks=True,

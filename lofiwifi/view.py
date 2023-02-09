@@ -57,9 +57,6 @@ while True:
         clear_input(window, values)
     if event != "Submit":
         continue
-    if not values['title']:
-        sg.Popup('Please select a Title')
-        continue
     if not values['url']:
         sg.Popup('Please select a URL')
         continue
@@ -67,8 +64,8 @@ while True:
         sg.Popup('Please select a Loop')
         continue
 
-    source = Source(values['title'])
-    source.Download(values['url'])
+    source = Source(values['url'], values['title'])
+    source.Download()
     lofiwifi = Mix(
         source.track_list_data,
         source.tracks_directory,
