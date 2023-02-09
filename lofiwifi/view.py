@@ -14,7 +14,6 @@ soundcloud = [
     [sg.T('Title', size=(15, 1)), sg.Input('', key='title')],
     [sg.T('URL', size=(15, 1)), sg.Input('https://soundcloud.com/', key='url')],
     [sg.T('Loop Directory', size=(15, 1))] + loop_inputs,
-    [sg.Text('Audio Type', size=(15, 1)),sg.Combo(values=audio_types, default_value=audio_types[0], size=(20, len(audio_types)), key='audio_type')],
     # [sg.T('Save Directory', size=(15, 1)),sg.Input(save_dir, key='save'), sg.FolderBrowse()],
 ]
 
@@ -26,6 +25,7 @@ app_layout = [
     ],
     [
         sg.Column([[
+            sg.Combo(values=audio_types, default_value=audio_types[0], size=(5, len(audio_types)), key='audio_type'),
             sg.Checkbox('Audio Only', default=False, enable_events=True, key='audio_only'),
             sg.Button('Submit'),
             sg.Button('Clear'),
@@ -42,7 +42,7 @@ def clear_input(window, values):
 
 def toggle_loop(values):
     for input in loop_inputs:
-            input.update(disabled=values['audio_only'])
+        input.update(disabled=values['audio_only'])
 
 while True:
     event, values = window.read()
