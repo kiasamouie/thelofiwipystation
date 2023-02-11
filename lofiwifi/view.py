@@ -10,7 +10,7 @@ save_dir = os.path.expanduser('~\Documents')
 loop_inputs = [sg.Input('', key='loop'), sg.FileBrowse()]
 audio_types = ['mp3','wav']
 
-soundcloud = [
+mix = [
     [sg.T('Title', size=(15, 1)), sg.Input('', key='title')],
     [sg.T('URL', size=(15, 1)), sg.Input('https://soundcloud.com/', key='url')],
     [sg.T('Loop Directory', size=(15, 1))] + loop_inputs,
@@ -20,7 +20,7 @@ soundcloud = [
 app_layout = [
     [
         sg.TabGroup([[
-            sg.Tab('Soundcloud', soundcloud),
+            sg.Tab('Create Mix', mix),
         ]], enable_events=True, key="type")
     ],
     [

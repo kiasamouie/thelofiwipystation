@@ -14,18 +14,16 @@ class Source:
         self.url = url
         self.title = title if title else url.rsplit("/", 1)[1].title()
         self.tracks_directory = os.path.join(os.getcwd(), self.title, "tracks")
-        self.__ydl = youtube_dl.YoutubeDL(
-            {
-                'outtmpl': os.path.join(self.tracks_directory, "%(id)s.%(ext)s"),
-                'format': 'bestaudio/best',
-                'keepvideo': False,
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': 'mp3',
-                    'preferredquality': '320',
-                }],
-            }
-        )
+        self.__ydl = youtube_dl.YoutubeDL({
+            'outtmpl': os.path.join(self.tracks_directory, "%(id)s.%(ext)s"),
+            'format': 'bestaudio/best',
+            'keepvideo': False,
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '320',
+            }],
+        })
     
     def Get_Info(self, url):
         return self.__ydl.extract_info(url=url, download=False, process=False)

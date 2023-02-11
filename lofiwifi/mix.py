@@ -123,12 +123,12 @@ class Mix:
             name = f'{str(track_list_ids.index(id) + 1).zfill(2)}.{filename}'
             os.rename(file, os.path.join(self.tracks_directory, name))
     
+    def Audio(self):
+        self.__tracks = os.listdir(self.tracks_directory)
+        return concatenate_audioclips([AudioFileClip(os.path.join(self.tracks_directory, track)) for track in self.__tracks])
+
     def Loop(self, audio):
         if self.__loop.endswith(('png','jpg','jpeg')):
             return ImageClip(self.__loop).set_duration(audio.duration)
         elif self.__loop.endswith(('gif','mp4')):
             return VideoFileClip(self.__loop)
-
-    def Audio(self):
-        self.__tracks = os.listdir(self.tracks_directory)
-        return concatenate_audioclips([AudioFileClip(os.path.join(self.tracks_directory, track)) for track in self.__tracks])
