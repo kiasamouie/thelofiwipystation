@@ -90,8 +90,8 @@ while True:
         audio_only=values['audio_only'],
         audio_type=values['audio_type'],
         keep_tracks=values['keep_tracks'],
-        fadein=values['fade_in'],
-        fadeout=values['fade_out'],
+        fade_in=values['fade_in'],
+        fade_out=values['fade_out'],
     )
     lofiwifi.Create_Mix()
 

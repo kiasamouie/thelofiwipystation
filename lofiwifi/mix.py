@@ -19,8 +19,8 @@ class Mix:
         n_times=1,
         extra_seconds=None,
         keep_tracks=False,
-        fadein=None,
-        fadeout=None,
+        fade_in=None,
+        fade_out=None,
     ):
         self.track_list_data = track_list_data
         self.tracks_directory = tracks_directory
@@ -30,8 +30,8 @@ class Mix:
         self.__n_times = n_times
         self.__extra_seconds = extra_seconds
         self.__keep_tracks = keep_tracks
-        self.__fadein = fadein
-        self.__fadeout = fadeout
+        self.__fade_in = fade_in
+        self.__fade_out = fade_out
 
         self.__tracks = os.listdir(tracks_directory)
         self.__save_directory = tracks_directory.rsplit("\\", 1)[0]
@@ -49,10 +49,10 @@ class Mix:
             video = concatenate_videoclips(mix, method="compose")
             video.audio = audio
 
-            if self.__fadein:
-                video = video.fadein(self.__fadein)
-            if self.__fadeout:
-                video = video.fadeout(self.__fadeout)
+            if self.__fade_in:
+                video = video.fadein(self.__fade_in)
+            if self.__fade_out:
+                video = video.fadeout(self.__fade_out)
 
             video.write_videofile(
                 self.__videoFile,
