@@ -23,22 +23,23 @@ fadeinout = [
 ]
 
 mix = [
-    [sg.T('Title', size=(15, 1)), sg.Input('', key='title')],
-    [sg.T('URL', size=(15, 1)), sg.Input('https://soundcloud.com/', key='url')],
-    [sg.T('Loop Directory', size=(15, 1))] 
+    [sg.T('Title', size=(23, 1)), sg.Input('', key='title')],
+    [sg.T('URL', size=(23, 1)), sg.Input('https://soundcloud.com/', key='url')],
+    [sg.T('Loop Directory', size=(23, 1))] 
     + loop_inputs
 ]
 
 extra = [
-    [sg.T('Fade in/out', size=(15, 1))]
+    [sg.T('Fade in/out', size=(10, 1))]
     + fadeinout,
-    [sg.T('Logo', size=(15, 1))]
-    + logo,
-    [sg.T('Msg', size=(15, 1))]
-    + msg
+    # [sg.T('Logo', size=(15, 1))]
+    # + logo,
+    # [sg.T('Msg', size=(15, 1))]
+    # + msg
     # [sg.T('Save Directory', size=(15, 1)),sg.Input(save_dir, key='save'), sg.FolderBrowse()],
 ]
 
+short_url = sg.Checkbox('Short URL', default=True, enable_events=True, key='short_url')
 show_captions = sg.Checkbox('Captions', default=False, enable_events=True, key='show_captions')
 keep_tracks = sg.Checkbox('Keep Tracks', default=False, enable_events=True, key='keep_tracks')
 audio_only = sg.Checkbox('Audio Only', default=False, enable_events=True, key='audio_only')
@@ -52,6 +53,7 @@ app_layout = [
     ],
     [
         sg.Column([[
+            short_url,
             show_captions,
             keep_tracks,
             audio_only,
@@ -65,15 +67,14 @@ app_layout = [
 
 window = sg.Window('LofiWiPyStation', app_layout)
 
-def clear_input(window, values):
+def clear_input(window):
     for key, element in window.key_dict.items():
-        if isinstance(element, sg.Input):
+        if isinstance(element, sg.Input) or isinstance(element, sg.Checkbox):
             element.update(value='')
 
 def toggle_loop(values):
     show_captions.update(value=(values['show_captions'] and not values['audio_only']))
-    msg[0].update(value='')
-    inputs = loop_inputs.copy() + fadeinout.copy() + logo.copy() + [show_captions]
+    inputs = loop_inputs.copy() + fadeinout.copy() + [show_captions]
     for input in inputs:
         input.update(disabled=values['audio_only'])
     inputs = None
@@ -87,7 +88,7 @@ while True:
     # print(event)
     # print(values)
     if event == 'Clear':
-        clear_input(window, values)
+        clear_input(window)
     if event != "Submit":
         continue
     if not values['url']:
@@ -103,7 +104,7 @@ while True:
         sg.Popup('Fade In/Out values must be numbers')
         continue
 
-    source = Source(values['url'], values['title'])
+    source = Source(values['url'], values['title'], short_url=True)
     source.Download()
     lofiwifi = Mix(
         source.track_list_data,
@@ -114,8 +115,6 @@ while True:
         keep_tracks=values['keep_tracks'],
         fade_in=values['fade_in'],
         fade_out=values['fade_out'],
-        logo=values['logo'],
-        msg=values['msg'],
         show_captions=values['show_captions']
     )
     lofiwifi.Create_Mix()
