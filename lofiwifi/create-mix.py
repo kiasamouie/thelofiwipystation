@@ -5,20 +5,9 @@ from lofiwifi.source import Source
 from lofiwifi.mix import Mix
 
 # Default Values
-title = "Sonic"
-loop = "sonic.jpg"
-url = [
-    "https://www.youtube.com/watch?v=hPIM9KfMW8s",
-    "https://soundcloud.com/andrewoneaware/the-streets-of-rage-crime-city-lofi-remix",
-    "https://soundcloud.com/melodieszone/wilderness-lofigolden-axe",
-    "https://www.youtube.com/watch?v=gdsMklAtDyw",
-    "https://www.youtube.com/watch?v=RIV8X3U_m3Q",
-    "https://soundcloud.com/amphee/make-eggs-throw-eggs",
-    "https://soundcloud.com/user-677008859/green-hills",
-    "https://www.youtube.com/watch?v=ScximJGRI7s",
-    "https://www.youtube.com/watch?v=qfhe1HtBWTc",
-    "https://www.youtube.com/watch?v=b0EZi14yQcU"
-]
+title = "Test"
+loop = r"D:\Documents\Scripts\LofiWifi\loop.mp4"
+url = "https://soundcloud.com/thelofiwifistation/sets/head-bopping"
 
 try:
     arguments, values = getopt.getopt(sys.argv[1:], "t:u:l:m:", ["TITLE", "URL", "LOOP", "MIX"])
@@ -38,13 +27,14 @@ try:
         source.track_list_data,
         source.tracks_directory,
         loop=loop,
+        # captions=True,
         # audio_only=True,
         # audio_type='wav',
         # n_times=6,
         # extra_seconds=2,
         # keep_tracks=True,
-        fadein=2,
-        fadeout=2,
+        fade_in=2,
+        fade_out=2,
     )
     lofiwifi.Create_Mix()
 

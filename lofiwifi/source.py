@@ -42,7 +42,7 @@ class Source:
                 self.track_list_data.append({
                     "id": entry['id'],
                     "title": f"{track['uploader']} - {track['title']}",
-                    "url": self.Short_Url(track['webpage_url'])
+                    "url": self.Url(track['webpage_url'])
                 })
             self.url = [self.url]
         else:
@@ -52,12 +52,12 @@ class Source:
                 self.track_list_data.append({
                     "id": track['id'],
                     "title": track['title'],
-                    "url": self.Short_Url(u)
+                    "url": self.Url(u)
                 })
         if not os.path.isdir(self.tracks_directory):
             self.__ydl.download(self.url)
 
-    def Short_Url(self, url):
+    def Url(self, url):
         if not self.__short_url:
             return url
         payload = {

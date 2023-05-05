@@ -1,11 +1,55 @@
 import os
 import PySimpleGUI as sg
 
+import json
+import requests
+
 from lofiwifi.source import Source
 from lofiwifi.mix import Mix
 
 # pip install pysimplegui
 # sg.theme('DarkBlack')
+
+def GetRecentPlaylists():
+    headers = {
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,de;q=0.7,fa;q=0.6',
+        'Authorization': 'OAuth 2-293729-66593390-IqsLWFiWRwv0w3J',
+        'Connection': 'keep-alive',
+        'DNT': '1',
+        'Origin': 'https://soundcloud.com',
+        'Referer': 'https://soundcloud.com/',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-site',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
+        'sec-ch-ua': '"Chromium";v="112", "Google Chrome";v="112", "Not:A-Brand";v="99"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+    }
+
+    params = {
+        'client_id': 'WnapqLyoN0eHT0qfAtQSkZFrFkCgf8Gp',
+        'limit': '10',
+        'offset': '0',
+        'linked_partitioning': '1',
+        'app_version': '1681813797',
+        'app_locale': 'en',
+    }
+
+    response = requests.get('https://api-v2.soundcloud.com/stream/users/1080275071', params=params,headers=headers)
+    if response.status_code != 200:
+        return None
+    collection = json.loads(response.text)['collection']
+    playlists = []
+    for i, mix in enumerate(collection):
+        try:
+            playlists.append(mix['playlist']['permalink_url'])
+        except:
+            continue
+    return playlists
+
+
 save_dir = os.path.expanduser('~\Documents')
 audio_types = ['mp3','wav']
 loop_inputs = [
@@ -22,9 +66,14 @@ fadeinout = [
     sg.Input('0', key='fade_out',size=(3,1)),
 ]
 
+playlists = GetRecentPlaylists()
+url_input = sg.Input('https://soundcloud.com/', key='url')
+if playlists:
+    url_input = sg.Combo(values=playlists, default_value=playlists[0], size=55, key='url')
+
 mix = [
     [sg.T('Title', size=(23, 1)), sg.Input('', key='title')],
-    [sg.T('URL', size=(23, 1)), sg.Input('https://soundcloud.com/', key='url')],
+    [sg.T('URL', size=(23, 1)), url_input],
     [sg.T('Loop Directory', size=(23, 1))] 
     + loop_inputs
 ]

@@ -20,8 +20,6 @@ class Mix:
         keep_tracks=False,
         fade_in=None,
         fade_out=None,
-        logo=None,
-        msg=None,
         show_captions=None,
     ):
         self.track_list_data = track_list_data
@@ -33,9 +31,6 @@ class Mix:
         self.__keep_tracks = keep_tracks
         self.__fade_in = fade_in
         self.__fade_out = fade_out
-
-        self.__logo = logo
-        self.__msg = msg
 
         self.__tracks = os.listdir(tracks_directory)
         self.__save_directory = tracks_directory.rsplit("\\", 1)[0]
@@ -72,9 +67,6 @@ class Mix:
             if self.__fade_out:
                 video = video.fadeout(self.__fade_out)
 
-            if self.__logo or self.__msg:
-                video = self.Logo_Or_Caption(video)
-
             if self.__show_captions:
                 video = CompositeVideoClip([video,
                     CompositeVideoClip(self.__captions)
@@ -96,6 +88,18 @@ class Mix:
         self.Clean_Tracks()
         audio = self.Create_Info_Audio()
         return audio
+    
+    def Clean_Tracks(self):
+        track_list_ids = [obj['id'] for obj in self.track_list_data]
+        for i, filename in enumerate(os.listdir(self.tracks_directory)):
+            name = ''
+            file = os.path.join(self.tracks_directory, filename)
+            if not filename.endswith(".mp3"):
+                os.remove(file)
+                continue
+            id = filename.replace(".mp3", '')
+            name = f'{str(track_list_ids.index(id) + 1).zfill(2)}.{filename}'
+            os.rename(file, os.path.join(self.tracks_directory, name))
 
     def Create_Info_Audio(self):
         merged_audio = []
@@ -151,43 +155,8 @@ class Mix:
         infoFile.close()
         return concatenate_audioclips(merged_audio)
 
-    def Clean_Tracks(self):
-        track_list_ids = [obj['id'] for obj in self.track_list_data]
-        for i, filename in enumerate(os.listdir(self.tracks_directory)):
-            name = ''
-            file = os.path.join(self.tracks_directory, filename)
-            if not filename.endswith(".mp3"):
-                os.remove(file)
-                continue
-            id = filename.replace(".mp3", '')
-            name = f'{str(track_list_ids.index(id) + 1).zfill(2)}.{filename}'
-            os.rename(file, os.path.join(self.tracks_directory, name))
-    
-    def Audio(self):
-        self.__tracks = os.listdir(self.tracks_directory)
-        return concatenate_audioclips([AudioFileClip(os.path.join(self.tracks_directory, track)) for track in self.__tracks])
-
     def Loop(self, audio):
         if self.__loop.endswith(('png','jpg','jpeg')):
             return ImageClip(self.__loop).set_duration(audio.duration)
         elif self.__loop.endswith(('gif','mp4')):
             return VideoFileClip(self.__loop)
-    
-    def Logo_Or_Caption(self, video):
-        overlay = [video]
-        if self.__logo:
-            overlay.append(
-                ImageClip(self.__logo)
-                # .resize(height=150, width=150)
-                .margin(left=25, bottom=25, opacity=0)
-                .set_position(("left", "bottom"))
-                .set_duration(video.duration)
-            )
-        if self.__msg:
-            overlay.append(
-                TextClip(self.__msg,fontsize=20,color='white',font='Corbel Light')
-                .margin(left=180, bottom=65, opacity=0)
-                .set_position(("left", "bottom"))
-                .set_duration(video.duration)
-            )
-        return CompositeVideoClip(overlay)
