@@ -67,9 +67,7 @@ fadeinout = [
 ]
 
 playlists = GetRecentPlaylists()
-url_input = sg.Input('https://soundcloud.com/', key='url')
-if playlists:
-    url_input = sg.Combo(values=playlists, default_value=playlists[0], size=55, key='url')
+url_input = sg.Combo(values=playlists, default_value=playlists[0], size=55, key='url') if playlists else sg.Input('https://soundcloud.com/', key='url')
 
 mix = [
     [sg.T('Title', size=(23, 1)), sg.Input('', key='title')],
@@ -153,7 +151,7 @@ while True:
         sg.Popup('Fade In/Out values must be numbers')
         continue
 
-    source = Source(values['url'], values['title'], short_url=True)
+    source = Source(values['url'], values['title'], short_url=values['short_url'])
     source.Download()
     lofiwifi = Mix(
         source.track_list_data,
