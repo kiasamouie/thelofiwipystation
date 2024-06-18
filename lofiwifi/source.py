@@ -4,14 +4,15 @@ import os
 import sys
 import youtube_dl
 
+from classes import Track
+
 
 class Source:
-
-    __ydl = None
 
     track_list_data = []
     tracks_directory = None
     __short_url = None
+    __ydl = None
 
     def __init__(self, url, title=None, short_url=False):
         self.url = url
@@ -39,21 +40,21 @@ class Source:
             # self.title = playlist['title']
             for entry in playlist['entries']:
                 track = self.Get_Info(entry['url'])
-                self.track_list_data.append({
+                self.track_list_data.append(Track(**{
                     "id": entry['id'],
                     "title": f"{track['uploader']} - {track['title']}",
                     "url": self.Url(track['webpage_url'])
-                })
+                }))
             self.url = [self.url]
         else:
             # list of urls
             for u in self.url:
                 track = self.Get_Info(u)
-                self.track_list_data.append({
+                self.track_list_data.append(Track(**{
                     "id": track['id'],
                     "title": track['title'],
                     "url": self.Url(u)
-                })
+                }))
         if not os.path.isdir(self.tracks_directory):
             self.__ydl.download(self.url)
 

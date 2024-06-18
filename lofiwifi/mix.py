@@ -90,9 +90,8 @@ class Mix:
         return audio
     
     def Clean_Tracks(self):
-        track_list_ids = [obj['id'] for obj in self.track_list_data]
+        track_list_ids = [track.id for track in self.track_list_data]
         for i, filename in enumerate(os.listdir(self.tracks_directory)):
-            name = ''
             file = os.path.join(self.tracks_directory, filename)
             if not filename.endswith(".mp3"):
                 os.remove(file)
@@ -128,7 +127,7 @@ class Mix:
                     timestamp = timestamp.split(':', 1)[1]
 
                 backslash = "\n" if not last or filename != self.__tracks[-1] else ""
-                track_name = self.track_list_data[i]['title']
+                track_name = self.track_list_data[i].title
                 
                 if n > 0:
                     track_name = track_name.split(" - ", 1)[0]
@@ -148,7 +147,7 @@ class Mix:
                 infoFile.write(f"LOOP\n")
 
         infoFile.write("\n\n")
-        track_list_urls = [obj['url'] for obj in self.track_list_data]
+        track_list_urls = [track.url for track in self.track_list_data]
         for i, url in enumerate(track_list_urls):
             backslash = "\n" if url != track_list_urls[-1] else ""
             infoFile.write(f'{str(i+1).zfill(2)} - {url}{backslash}')
