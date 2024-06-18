@@ -1,6 +1,6 @@
 # TheLofiWiPyStation
 
-The Lofi WiFi PyStation is a Python package designed to download tracks from YouTube and create mix videos with various customizations. It leverages `youtube_dl` for downloading and `moviepy` for video creation, enabling users to generate personalized lofi music mixes.
+TheLofiWiPyStation is a Python package designed to download tracks from YouTube and create mix videos with various customizations. It leverages `youtube_dl` for downloading and `moviepy` for video creation, enabling users to generate personalized lofi music mixes.
 
 ## Features
 
@@ -55,9 +55,11 @@ mix.Create_Mix()
 Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
 
-Acknowledgments
+## Acknowledgments
+```sh
 youtube-dl
 moviepy
 eyed3
+```
 
 This `README.md` file provides an overview of the project, installation instructions, usage examples, and additional information about licensing and contributions. Feel free to adjust the content based on your specific needs and preferences.
