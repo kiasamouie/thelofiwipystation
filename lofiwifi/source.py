@@ -4,11 +4,14 @@ import os
 import sys
 import youtube_dl
 
-from classes import Track
-
+from dataclasses import dataclass, field, InitVar
+@dataclass
+class Track:
+    id: int
+    title: str
+    url: str
 
 class Source:
-
     track_list_data = []
     tracks_directory = None
     __short_url = None
