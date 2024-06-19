@@ -14,10 +14,10 @@ class Source:
     __short_url = None
     __ydl = None
 
-    def __init__(self, url, title=None, short_url=False):
+    def __init__(self, url, title=None, save_directory=None, short_url=False):
         self.url = url
         self.title = title if title else url.rsplit("/", 1)[1].title()
-        self.tracks_directory = os.path.join(os.getcwd(), self.title, "tracks")
+        self.tracks_directory = os.path.join(save_directory if save_directory else os.getcwd(), self.title, "tracks")
         self.__short_url = short_url
         self.__ydl = youtube_dl.YoutubeDL({
             'outtmpl': os.path.join(self.tracks_directory, "%(id)s.%(ext)s"),

@@ -107,51 +107,50 @@ class Mix:
         next = 0
         total_duration = 0
         self.__tracks = os.listdir(self.tracks_directory)
-        infoFile = open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8")
-        for n in range(0, self.__n_times):
-            last = n + 1 == self.__n_times
-            for i, filename in enumerate(self.__tracks):
-                file = os.path.join(self.tracks_directory, filename)
-                merged_audio.append(AudioFileClip(file))
-                mp3 = eyed3.load(file)
-                secs = timedelta(seconds=int(mp3.info.time_secs))
-                total_duration += secs.seconds
-                if i == 0 and n == 0:
-                    timestamp = "0:00:00"
-                    next = secs
-                else:
-                    start = next
-                    timestamp = str(next)
-                    next += secs
-                if next.seconds - secs.seconds < 3600 and not math.ceil(total_duration - secs.seconds * self.__n_times) > 3600:
-                    timestamp = timestamp.split(':', 1)[1]
+        with open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8") as infoFile:
+            for n in range(0, self.__n_times):
+                last = n + 1 == self.__n_times
+                for i, filename in enumerate(self.__tracks):
+                    file = os.path.join(self.tracks_directory, filename)
+                    merged_audio.append(AudioFileClip(file))
+                    mp3 = eyed3.load(file)
+                    secs = timedelta(seconds=int(mp3.info.time_secs))
+                    total_duration += secs.seconds
+                    if i == 0 and n == 0:
+                        timestamp = "0:00:00"
+                        next = secs
+                    else:
+                        start = next
+                        timestamp = str(next)
+                        next += secs
+                    if next.seconds - secs.seconds < 3600 and not math.ceil(total_duration - secs.seconds * self.__n_times) > 3600:
+                        timestamp = timestamp.split(':', 1)[1]
 
-                backslash = "\n" if not last or filename != self.__tracks[-1] else ""
-                track_name = self.track_list_data[i].title
-                
-                if n > 0:
-                    track_name = track_name.split(" - ", 1)[0]
+                    backslash = "\n" if not last or filename != self.__tracks[-1] else ""
+                    track_name = self.track_list_data[i].title
+                    
+                    if n > 0:
+                        track_name = track_name.split(" - ", 1)[0]
 
-                if self.__show_captions:
-                    self.__captions.append(
-                        TextClip(track_name, fontsize=24, color='white', font='Corbel Light')
-                        .set_start(start.seconds)
-                        .set_duration(mp3.info.time_secs)
-                        .crossfadein(2)
-                        .crossfadeout(2)
-                    )
-                count += 1
-                infoFile.write(f'{timestamp} - {str(count).zfill(2)} | {track_name}{backslash}')
+                    if self.__show_captions:
+                        self.__captions.append(
+                            TextClip(track_name, fontsize=24, color='white', font='Corbel Light')
+                            .set_start(start.seconds)
+                            .set_duration(mp3.info.time_secs)
+                            .crossfadein(2)
+                            .crossfadeout(2)
+                        )
+                    count += 1
+                    infoFile.write(f'{timestamp} - {str(count).zfill(2)} | {track_name}{backslash}')
 
-            if self.__n_times > 1 and not last:
-                infoFile.write(f"LOOP\n")
+                if self.__n_times > 1 and not last:
+                    infoFile.write(f"LOOP\n")
 
-        infoFile.write("\n\n")
-        track_list_urls = [track.url for track in self.track_list_data]
-        for i, url in enumerate(track_list_urls):
-            backslash = "\n" if url != track_list_urls[-1] else ""
-            infoFile.write(f'{str(i+1).zfill(2)} - {url}{backslash}')
-        infoFile.close()
+            infoFile.write("\n\n")
+            track_list_urls = [track.url for track in self.track_list_data]
+            for i, url in enumerate(track_list_urls):
+                backslash = "\n" if url != track_list_urls[-1] else ""
+                infoFile.write(f'{str(i+1).zfill(2)} - {url}{backslash}')
         return concatenate_audioclips(merged_audio)
 
     def Loop(self, audio):

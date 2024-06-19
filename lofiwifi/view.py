@@ -151,7 +151,7 @@ while True:
         sg.Popup('Fade In/Out values must be numbers')
         continue
 
-    source = Source(values['url'], values['title'], short_url=values['short_url'])
+    source = Source(values['url'], title=values['title'], save_directory=r"C:\Users\PC\Videos", short_url=values['short_url'])
     source.Download()
     lofiwifi = Mix(
         source.track_list_data,
