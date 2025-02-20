@@ -10,6 +10,7 @@ from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.audio.AudioClip import concatenate_audioclips
 from moviepy.video.VideoClip import TextClip, ImageClip
+from moviepy.video.fx import FadeIn, FadeOut
  
 import pyperclip
 
@@ -69,9 +70,9 @@ class Mix:
             video.audio = audio
 
             if self.__fade_in:
-                video = video.fadein(self.__fade_in)
+                video = FadeIn(video,self.__fade_in)
             if self.__fade_out:
-                video = video.fadeout(self.__fade_out)
+                video = FadeOut(video, self.__fade_out)
 
             if self.__show_captions:
                 video = CompositeVideoClip([video,
