@@ -2,7 +2,6 @@ import os
 import json
 import subprocess
 import requests
-import pyperclip
 
 class Source:
     def __init__(self, url, title=None, save_directory=None, short_url=False):

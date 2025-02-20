@@ -12,8 +12,6 @@ from moviepy.audio.AudioClip import concatenate_audioclips
 from moviepy.video.VideoClip import TextClip, ImageClip
 from moviepy.video.fx import FadeIn, FadeOut
  
-import pyperclip
-
 class Mix:
 
     def __init__(
@@ -98,8 +96,6 @@ class Mix:
     
     def Clean_Tracks(self):
         track_list_ids = [track['id'] for track in self.track_list_data]
-        pyperclip.copy(self.track_list_data)
-        for i, filename in enumerate(os.listdir(self.tracks_directory)):
             file = os.path.join(self.tracks_directory, filename)
             if not filename.endswith(".mp3"):
                 os.remove(file)
