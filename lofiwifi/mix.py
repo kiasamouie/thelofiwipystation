@@ -4,8 +4,14 @@ import shutil as sh
 from datetime import timedelta
 
 import eyed3
-from moviepy.editor import *
-
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
+from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
+from moviepy.audio.io.AudioFileClip import AudioFileClip
+from moviepy.audio.AudioClip import concatenate_audioclips
+from moviepy.video.VideoClip import TextClip, ImageClip
+ 
+import pyperclip
 
 class Mix:
 
@@ -57,7 +63,7 @@ class Mix:
 
             mix = [loop] * iterations
             if seconds_to_remove >=1:
-                mix[-1] = loop.set_duration(loop.duration - seconds_to_remove)
+                mix[-1] = loop.with_duration(loop.duration - seconds_to_remove)
 
             video = concatenate_videoclips(mix, method="compose")
             video.audio = audio
@@ -90,7 +96,8 @@ class Mix:
         return audio
     
     def Clean_Tracks(self):
-        track_list_ids = [track.id for track in self.track_list_data]
+        track_list_ids = [track['id'] for track in self.track_list_data]
+        pyperclip.copy(self.track_list_data)
         for i, filename in enumerate(os.listdir(self.tracks_directory)):
             file = os.path.join(self.tracks_directory, filename)
             if not filename.endswith(".mp3"):
@@ -127,7 +134,7 @@ class Mix:
                         timestamp = timestamp.split(':', 1)[1]
 
                     backslash = "\n" if not last or filename != self.__tracks[-1] else ""
-                    track_name = self.track_list_data[i].title
+                    track_name = self.track_list_data[i]['title']
                     
                     if n > 0:
                         track_name = track_name.split(" - ", 1)[0]
@@ -147,7 +154,7 @@ class Mix:
                     infoFile.write(f"LOOP\n")
 
             infoFile.write("\n\n")
-            track_list_urls = [track.url for track in self.track_list_data]
+            track_list_urls = [track['url'] for track in self.track_list_data]
             for i, url in enumerate(track_list_urls):
                 backslash = "\n" if url != track_list_urls[-1] else ""
                 infoFile.write(f'{str(i+1).zfill(2)} - {url}{backslash}')
