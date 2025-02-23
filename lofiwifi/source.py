@@ -36,13 +36,15 @@ class Source:
                 self.track_list_data.append({
                     "id": e.get('id'),
                     "title": f"{e.get('uploader')} - {e.get('title')}",
-                    "url": self._url(e.get('webpage_url', ''))
+                    "url": self._url(e.get('webpage_url', '')),
+                    "duration": e.get('duration')
                 })
         else:
             self.track_list_data.append({
                 "id": info.get('id'),
                 "title": info.get('title'),
-                "url": self._url(info.get('webpage_url', ''))
+                "url": self._url(info.get('webpage_url', '')),
+                "duration": info.get('duration')
             })
 
     def _download_tracks(self, urls):
@@ -52,7 +54,7 @@ class Source:
             'yt-dlp',
             '--format', 'bestaudio/best',
             '--extract-audio',
-            '--audio-format', 'mp3',
+            '--audio-format', 'wav',
             '--audio-quality', '320K',
             '--output', os.path.join(self.tracks_directory, '%(id)s')
         ] + urls
@@ -61,15 +63,14 @@ class Source:
     def _url(self, url):
         if not self.short_url:
             return url
-        payload = {
-            "dynamicLinkInfo": {
-                "domainUriPrefix": "https://on.soundcloud.com",
-                "link": url
-            },
-            "suffix": {"option": "SHORT"}
-        }
         r = requests.post(
             'https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyCyJd9YWHCkMgshFd2nDL-Ig_qjnuUSH20',
-            json=payload
+            json={
+                "dynamicLinkInfo": {
+                    "domainUriPrefix": "https://on.soundcloud.com",
+                    "link": url
+                },
+                "suffix": {"option": "SHORT"}
+            }
         )
         return r.json().get('shortLink', url) if r.status_code == 200 else url

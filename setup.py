@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="thelofiwipystation",
-    version="0.0.1",
+    version="0.0.2",
     description="thelofiwipystation",
     long_description=readme(),
     long_description_content_type="text/markdown",
@@ -25,6 +25,6 @@ setup(
     keywords="thelofiwipystation",
     license="MIT",
     packages=["lofiwifi"],
-    install_requires=['moviepy','yt-dlp==2025.1.26','eyed3','requests'],
+    install_requires=['moviepy','yt-dlp==2025.1.26','requests'],
     include_package_data=True,
 )

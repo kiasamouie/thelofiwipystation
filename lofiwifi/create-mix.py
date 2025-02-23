@@ -6,7 +6,7 @@ from mix import Mix
 
 # Default Values
 title = "Test"
-loop = r"D:\Documents\Scripts\LofiWifi\loop.gif"
+loop = r"D:\Documents\Scripts\LofiWifi\sonic.jpg"
 url = "https://soundcloud.com/thekiadoe/sets/test"
 
 try:
@@ -27,6 +27,7 @@ try:
         source.track_list_data,
         source.tracks_directory,
         loop=loop,
+        # encoding="h264_nvenc"
         # captions=True,
         # audio_only=True,
         # audio_type='wav',

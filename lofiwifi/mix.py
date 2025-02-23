@@ -3,7 +3,6 @@ import os
 import shutil as sh
 from datetime import timedelta
 
-import eyed3
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
@@ -21,12 +20,13 @@ class Mix:
         tracks_directory,
         loop=None,
         audio_only=False,
-        audio_type='mp3',
+        audio_type='wav',
         n_times=1,
         keep_tracks=False,
         fade_in=None,
         fade_out=None,
         show_captions=None,
+        encoding="libx264",
     ):
         self.track_list_data = track_list_data
         self.tracks_directory = tracks_directory
@@ -46,6 +46,8 @@ class Mix:
         
         self.__show_captions = show_captions
         self.__captions = []
+        
+        self.__encoding = encoding
 
     def Create_Mix(self):
         audio = self.Get_Info_Audio()
@@ -85,7 +87,7 @@ class Mix:
                 remove_temp=False,
                 fps=24,
                 threads=32,
-                codec="h264_nvenc"
+                codec=self.__encoding
             )
         if not self.__keep_tracks:
             sh.rmtree(self.tracks_directory)
@@ -99,10 +101,10 @@ class Mix:
         track_list_ids = [track['id'] for track in self.track_list_data]
         for i, filename in enumerate(os.listdir(self.tracks_directory)):
             file = os.path.join(self.tracks_directory, filename)
-            if not filename.endswith(".mp3"):
+            if not filename.endswith(".wav"):
                 os.remove(file)
                 continue
-            id = filename.replace(".mp3", '')
+            id = filename.replace(".wav", '')
             name = f'{str(track_list_ids.index(id) + 1).zfill(2)}.{filename}'
             os.rename(file, os.path.join(self.tracks_directory, name))
 
@@ -119,8 +121,8 @@ class Mix:
                 for i, filename in enumerate(self.__tracks):
                     file = os.path.join(self.tracks_directory, filename)
                     merged_audio.append(AudioFileClip(file))
-                    mp3 = eyed3.load(file)
-                    secs = timedelta(seconds=int(mp3.info.time_secs))
+                    duration = int(self.track_list_data[i]['duration'])
+                    secs = timedelta(seconds=duration)
                     total_duration += secs.seconds
                     if i == 0 and n == 0:
                         timestamp = "0:00:00"
@@ -142,7 +144,7 @@ class Mix:
                         self.__captions.append(
                             TextClip(track_name, fontsize=24, color='white', font='Corbel Light')
                             .set_start(start.seconds)
-                            .set_duration(mp3.info.time_secs)
+                            .set_duration(duration)
                             .crossfadein(2)
                             .crossfadeout(2)
                         )
@@ -161,6 +163,6 @@ class Mix:
 
     def Loop(self, audio):
         if self.__loop.endswith(('png','jpg','jpeg')):
-            return ImageClip(self.__loop).set_duration(audio.duration)
+            return ImageClip(self.__loop).with_duration(audio.duration)
         elif self.__loop.endswith(('gif','mp4')):
             return VideoFileClip(self.__loop)
