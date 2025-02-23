@@ -39,7 +39,7 @@ class Mix:
         self.__fade_out = fade_out
 
         self.__tracks = os.listdir(tracks_directory)
-        self.__save_directory = tracks_directory.rsplit("\\", 1)[0]
+        self.__save_directory = os.path.dirname(tracks_directory)
 
         self.__audioFile = os.path.join(self.__save_directory, f"audio.{audio_type}")
         self.__videoFile = os.path.join(self.__save_directory, "video.mp4")
