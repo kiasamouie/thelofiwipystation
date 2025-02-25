@@ -16,20 +16,23 @@ class Mix:
 
     def __init__(
         self,
-        track_list_data,
-        tracks_directory,
+        tracks_info,
         loop=None,
         audio_only=False,
-        audio_type='wav',
         n_times=1,
         keep_tracks=False,
         fade_in=None,
         fade_out=None,
         show_captions=None,
-        encoding="libx264",
+        codec="libx264",
     ):
-        self.track_list_data = track_list_data
-        self.tracks_directory = tracks_directory
+        self.tracks_info = tracks_info
+        self.__save_directory = os.path.dirname(self.tracks_info['directory'])
+
+        self.__audioFile = os.path.join(self.__save_directory, f"audio.{self.tracks_info['audio_format']}")
+        self.__videoFile = os.path.join(self.__save_directory, "video.mp4")
+        self.__infoFile = os.path.join(self.__save_directory, "info.txt")
+        
         self.__loop = loop
         self.__audio_only = audio_only
 
@@ -37,21 +40,14 @@ class Mix:
         self.__keep_tracks = keep_tracks
         self.__fade_in = fade_in
         self.__fade_out = fade_out
-
-        self.__tracks = os.listdir(tracks_directory)
-        self.__save_directory = os.path.dirname(tracks_directory)
-
-        self.__audioFile = os.path.join(self.__save_directory, f"audio.{audio_type}")
-        self.__videoFile = os.path.join(self.__save_directory, "video.mp4")
-        self.__infoFile = os.path.join(self.__save_directory, "info.txt")
         
         self.__show_captions = show_captions
         self.__captions = []
         
-        self.__encoding = encoding
+        self.__codec = codec
 
     def Create_Mix(self):
-        audio = self.Get_Info_Audio()
+        audio = self.Create_Info_Audio()
         if self.__audio_only:
             audio.write_audiofile(self.__audioFile)
         else:
@@ -88,10 +84,10 @@ class Mix:
                 remove_temp=False,
                 fps=24,
                 threads=32,
-                codec=self.__encoding
+                codec=self.__codec
             )
         if not self.__keep_tracks:
-            sh.rmtree(self.tracks_directory)
+            sh.rmtree(self.tracks_info['directory'])
         return {
             'audio':self.__audioFile,
             'video':self.__videoFile,
@@ -99,36 +95,20 @@ class Mix:
             'save_directory':self.__save_directory
         }
 
-    def Get_Info_Audio(self):
-        self.Clean_Tracks()
-        audio = self.Create_Info_Audio()
-        return audio
-    
-    def Clean_Tracks(self):
-        track_list_ids = [track['id'] for track in self.track_list_data]
-        for i, filename in enumerate(os.listdir(self.tracks_directory)):
-            file = os.path.join(self.tracks_directory, filename)
-            if not filename.endswith(".wav"):
-                os.remove(file)
-                continue
-            id = filename.replace(".wav", '')
-            name = f'{str(track_list_ids.index(id) + 1).zfill(2)}.{filename}'
-            os.rename(file, os.path.join(self.tracks_directory, name))
-
     def Create_Info_Audio(self):
         merged_audio = []
         start = timedelta(seconds=0)
         count = 0
         next = 0
         total_duration = 0
-        self.__tracks = os.listdir(self.tracks_directory)
+        tracks = [f"{track['id']}.{self.tracks_info['audio_format']}" for track in self.tracks_info['data']]
         with open(os.path.join(self.__infoFile), 'w', encoding="utf-8") as infoFile:
             for n in range(0, self.__n_times):
                 last = n + 1 == self.__n_times
-                for i, filename in enumerate(self.__tracks):
-                    file = os.path.join(self.tracks_directory, filename)
+                for i, filename in enumerate(tracks):
+                    file = os.path.join(self.tracks_info['directory'], filename)
                     merged_audio.append(AudioFileClip(file))
-                    duration = int(self.track_list_data[i]['duration'])
+                    duration = int(self.tracks_info['data'][i]['duration'])
                     secs = timedelta(seconds=duration)
                     total_duration += secs.seconds
                     if i == 0 and n == 0:
@@ -141,8 +121,8 @@ class Mix:
                     if next.seconds - secs.seconds < 3600 and not math.ceil(total_duration - secs.seconds * self.__n_times) > 3600:
                         timestamp = timestamp.split(':', 1)[1]
 
-                    backslash = "\n" if not last or filename != self.__tracks[-1] else ""
-                    track_name = self.track_list_data[i]['title']
+                    backslash = "\n" if not last or filename != tracks[-1] else ""
+                    track_name = self.tracks_info['data'][i]['title']
                     
                     if n > 0:
                         track_name = track_name.split(" - ", 1)[0]
@@ -162,10 +142,12 @@ class Mix:
                     infoFile.write(f"LOOP\n")
 
             infoFile.write("\n\n")
-            track_list_urls = [track['url'] for track in self.track_list_data]
+            track_list_urls = [track['url'] for track in self.tracks_info['data']]
             for i, url in enumerate(track_list_urls):
                 backslash = "\n" if url != track_list_urls[-1] else ""
                 infoFile.write(f'{str(i+1).zfill(2)} - {url}{backslash}')
+            infoFile.write("\n\n")
+            infoFile.write(self.tracks_info['url'])
         return concatenate_audioclips(merged_audio)
 
     def Loop(self, audio):

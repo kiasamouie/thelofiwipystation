@@ -22,12 +22,11 @@ try:
             print(("MIX (% s)") % (val))
 
     source = Source(url, title)
-    source.download()
+    tracks_info = source.download()
     lofiwifi = Mix(
-        source.track_list_data,
-        source.tracks_directory,
+        tracks_info,
         loop=loop,
-        # encoding="h264_nvenc"
+        # codec="h264_nvenc"
         # captions=True,
         # audio_only=True,
         # audio_type='wav',
