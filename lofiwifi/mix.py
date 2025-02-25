@@ -43,6 +43,7 @@ class Mix:
 
         self.__audioFile = os.path.join(self.__save_directory, f"audio.{audio_type}")
         self.__videoFile = os.path.join(self.__save_directory, "video.mp4")
+        self.__infoFile = os.path.join(self.__save_directory, "info.mp4")
         
         self.__show_captions = show_captions
         self.__captions = []
@@ -91,6 +92,12 @@ class Mix:
             )
         if not self.__keep_tracks:
             sh.rmtree(self.tracks_directory)
+        return {
+            'audio':self.__audioFile,
+            'video':self.__videoFile,
+            'info':self.__infoFile,
+            'save_directory':self.__save_directory
+        }
 
     def Get_Info_Audio(self):
         self.Clean_Tracks()
@@ -115,7 +122,7 @@ class Mix:
         next = 0
         total_duration = 0
         self.__tracks = os.listdir(self.tracks_directory)
-        with open(os.path.join(self.__save_directory,"info.txt"), 'w', encoding="utf-8") as infoFile:
+        with open(os.path.join(self.__infoFile), 'w', encoding="utf-8") as infoFile:
             for n in range(0, self.__n_times):
                 last = n + 1 == self.__n_times
                 for i, filename in enumerate(self.__tracks):
