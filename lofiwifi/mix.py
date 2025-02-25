@@ -43,7 +43,7 @@ class Mix:
 
         self.__audioFile = os.path.join(self.__save_directory, f"audio.{audio_type}")
         self.__videoFile = os.path.join(self.__save_directory, "video.mp4")
-        self.__infoFile = os.path.join(self.__save_directory, "info.mp4")
+        self.__infoFile = os.path.join(self.__save_directory, "info.txt")
         
         self.__show_captions = show_captions
         self.__captions = []
