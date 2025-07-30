@@ -10,7 +10,7 @@ from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.audio.AudioClip import concatenate_audioclips
 from moviepy.video.VideoClip import TextClip, ImageClip
 from moviepy.video.fx import FadeIn, FadeOut
- 
+
 
 class Mix:
 
@@ -43,7 +43,6 @@ class Mix:
         
         self.__show_captions = show_captions
         self.__captions = []
-        
         self.__codec = codec
 
     def Create_Mix(self):
@@ -106,8 +105,7 @@ class Mix:
             for n in range(0, self.__n_times):
                 last = n + 1 == self.__n_times
                 for i, filename in enumerate(tracks):
-                    file = os.path.join(self.tracks_info['directory'], filename)
-                    merged_audio.append(AudioFileClip(file))
+                    merged_audio.append(AudioFileClip(os.path.join(self.tracks_info['directory'], filename)))
                     duration = int(self.tracks_info['data'][i]['duration'])
                     secs = timedelta(seconds=duration)
                     total_duration += secs.seconds

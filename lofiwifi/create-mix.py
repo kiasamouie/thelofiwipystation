@@ -5,9 +5,9 @@ from source import Source
 from mix import Mix
 
 # Default Values
-title = "Test"
-loop = r"D:\Documents\Scripts\LofiWifi\sonic.jpg"
-url = "https://soundcloud.com/thekiadoe/sets/test"
+title = ""
+loop = r"D:\Premiere pro\20250403_210454.mp4"
+url = "https://soundcloud.com/samui-music/sets/j-cole-kendrick-lamar-lo-fi-mashup"
 
 try:
     arguments, values = getopt.getopt(sys.argv[1:], "t:u:l:m:", ["TITLE", "URL", "LOOP", "MIX"])
@@ -26,7 +26,7 @@ try:
     lofiwifi = Mix(
         tracks_info,
         loop=loop,
-        # codec="h264_nvenc"
+        # codec="h264_nvenc",
         # captions=True,
         # audio_only=True,
         # audio_type='wav',

@@ -48,14 +48,14 @@ class Source:
                 self.tracks_info['data'].append({
                     "id": e.get('id'),
                     "title": f"{e.get('uploader')} - {e.get('title')}",
-                    "url": self._url(e.get('webpage_url', '')),
+                    "url": self._url(e.get('webpage_url')),
                     "duration": e.get('duration')
                 })
         else:
             self.tracks_info['data'].append({
                 "id": info.get('id'),
                 "title": info.get('title'),
-                "url": self._url(info.get('webpage_url', '')),
+                "url": self._url(info.get('webpage_url')),
                 "duration": info.get('duration')
             })
 
